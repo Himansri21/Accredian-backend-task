@@ -16,32 +16,42 @@ const prisma = new PrismaClient();
 // Routes
 
 // GET all items
-app.get("/submit-form", async (req, res) => {
-  try {
-    const items = await prisma.item.findMany();
-    res.json(items);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+app.get(
+  "https://accredian-backend-task-j2kv.onrender.com/submit-form",
+  async (req, res) => {
+    try {
+      await prisma.$connect();
+      res.send("Database connection successful!");
+    } catch (err) {
+      res
+        .status(500)
+        .json({ error: "Database connection failed", details: err.message });
+    }
   }
-});
+);
 
 // POST a new item
-app.post("/submit-form", async (req, res) => {
-  try {
-    const newItem = await prisma.item.create({
-      data: {
-        name: req.body.name,
-        email: req.body.email,
-        referralCode: req.body.referralCode,
-        refereeName: req.body.refereeName,
-        phoneNo: req.body.phoneNo
-      }
-    });
-    res.status(201).json(newItem);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+app.post(
+  "https://accredian-backend-task-j2kv.onrender.com/submit-form",
+  async (req, res) => {
+    console.log("Received request data:", req.body); // Log request data
+    try {
+      const newItem = await prisma.item.create({
+        data: {
+          name: req.body.name,
+          email: req.body.email,
+          referralCode: req.body.referralCode,
+          refereeName: req.body.refereeName,
+          phoneNo: req.body.phoneNo
+        }
+      });
+      res.status(201).json(newItem);
+    } catch (err) {
+      console.error("Error creating new item:", err); // Log error
+      res.status(500).json({ error: err.message });
+    }
   }
-});
+);
 
 // Start the server
 app.listen(port, () => {
