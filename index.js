@@ -2,15 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const app = express();
-const port = 3001;
+const port = 3000;
 
 // Middleware to parse JSON bodies and enable CORS
 app.use(express.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000"
-  })
-);
+app.use(cors());
 
 // Create a new Prisma client
 const prisma = new PrismaClient();
