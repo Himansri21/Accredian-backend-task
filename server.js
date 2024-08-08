@@ -2,20 +2,13 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 3001; // process.env.PORT for Render deployment
+const port = process.env.PORT || 3001;
 
-// Middleware to parse JSON bodies
 app.use(express.json());
-
-// CORS middleware
 app.use(cors());
 
-// new Prisma client
 const prisma = new PrismaClient();
 
-// Routes
-
-// GET all items
 app.get("/submit-form", async (req, res) => {
   try {
     await prisma.$connect();
@@ -27,9 +20,8 @@ app.get("/submit-form", async (req, res) => {
   }
 });
 
-// POST a new item
 app.post("/submit-form", async (req, res) => {
-  console.log("Received request data:", req.body); // Log request data
+  console.log("Received request data:", req.body);
   try {
     const newItem = await prisma.item.create({
       data: {
@@ -42,12 +34,11 @@ app.post("/submit-form", async (req, res) => {
     });
     res.status(201).json(newItem);
   } catch (err) {
-    console.error("Error creating new item:", err); // Log error
+    console.error("Error creating new item:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
